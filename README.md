@@ -1,5 +1,9 @@
 # Fraud_detection_project
 
+## 📌 Project Overview
+
+This project focuses on detecting fraudulent transactions in e-commerce and credit card datasets. It involves comprehensive data cleaning, exploratory data analysis (EDA), feature engineering, and handling of class imbalance to prepare the data for robust fraud detection modeling. The goal is to uncover fraud patterns and build a strong foundation for accurate and explainable machine learning models.
+
 ## Project Milestones & Completed Work
 
 ### 1. Data Loading and Initial Inspection
@@ -48,7 +52,15 @@
 - Developed in Jupyter Notebook with clear, well-documented sections.
 - Saved cleaned datasets (`cleaned_fraud_data.csv`, `cleaned_credit_data.csv`) and processed checkpoints using `pickle` for reproducibility.
 
----
+## 📁 Folder Structure
+
+fraud_detection_project/
+│
+├── data/ # Contains raw and cleaned data files
+├── docs/ # Contains detailed reports
+├── notebooks/1_eda.ipynb # Main Jupyter notebook for Task 1
+├── README.md # Project documentation
+└── requirements.txt # Python environment dependencies 
 
 ## ⚙️ How to Run
 
@@ -77,3 +89,31 @@ jupyter notebook 1_eda.ipynb
 
 ```
 
+🛠️ Dependencies
+
+    Python 3.8+
+
+    pandas
+
+    numpy
+
+    matplotlib / seaborn
+
+    scikit-learn
+
+    imbalanced-learn
+
+    ipaddress (for IP conversion)
+
+
+## 📌 Assumptions Made
+
+    IP addresses are assumed to be correctly mapped to countries using the ip_to_country.csv reference via merge_asof. Unmatched IPs are categorized as 'Unknown'.
+
+    Timestamps such as signup_time and purchase_time are assumed to be in the same timezone and accurately reflect user behavior.
+
+    Features like user_transaction_count and time_since_last_purchase were assumed redundant since they showed constant values per user.
+
+    Categorical values like source, browser, and sex are treated as complete and meaningful despite their imbalance or limited categories.
+
+    Fraud labels are assumed to be correctly annotated with no labeling noise or bias.
