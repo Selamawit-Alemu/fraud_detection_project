@@ -260,7 +260,7 @@ Saving the processed data is good practice to avoid reprocessing steps if the no
 
     Post-merge, auxiliary IP range columns are dropped to clean the dataset.
 
-18. Handling Unmatched IPs and Cleaning Country Columns
+## 18. Handling Unmatched IPs and Cleaning Country Columns
 
     About 19,383 IPs (13.2%) remain unmatched after merging, corresponding to IPs outside known ranges.
 
@@ -270,7 +270,7 @@ Saving the processed data is good practice to avoid reprocessing steps if the no
 
     Verification confirms all NaNs are replaced, with unmatched IPs clearly categorized.
 
-19. Match Rate Statistics
+## 19. Match Rate Statistics
 
     Total transactions: 151,112.
 
@@ -278,19 +278,19 @@ Saving the processed data is good practice to avoid reprocessing steps if the no
 
     Unmatched IPs explicitly labeled 'Unknown', ensuring clarity in downstream analysis.
 
-20. Geographic Distribution (Top 10 Countries)
+## 20. Geographic Distribution (Top 10 Countries)
 
     Top countries by transaction volume include the United States, followed by the 'Unknown' category, China, Japan, Germany, UK, Korea, Brazil, Canada, and Italy.
 
     The large 'Unknown' category highlights limitations of the IP mapping database and could be a predictor for fraud.
 
-21. Boundary IP Tests
+## 21. Boundary IP Tests
 
     Synthetic test IPs (min/max and out-of-range values) did not appear in real data, limiting the assessment of edge-case merges.
 
     This suggests the need for additional validation if edge-case IPs are important.
 
-22. Feature Summary of Engineered Time Features
+## 22. Feature Summary of Engineered Time Features
 
     Features like user_transaction_count and time_since_last_purchase are constant (1 and 0 respectively), indicating each user has only one transaction.
 
@@ -300,7 +300,7 @@ Saving the processed data is good practice to avoid reprocessing steps if the no
 
     time_to_purchase (hours since signup) shows wide variability and is a strong predictive feature.
 
-23. Credit Card Data Scaling
+## 23. Credit Card Data Scaling
 
     Amount and Time features in credit card data are scaled using StandardScaler to zero mean and unit variance.
 
@@ -308,7 +308,7 @@ Saving the processed data is good practice to avoid reprocessing steps if the no
 
     Original unscaled columns may be dropped after scaling.
 
-24. E-commerce Data Preprocessing for Modeling
+## 24. E-commerce Data Preprocessing for Modeling
 
     One-hot encoding applied on categorical features (source, browser, sex, country) with drop_first=True to prevent multicollinearity.
 
@@ -316,13 +316,13 @@ Saving the processed data is good practice to avoid reprocessing steps if the no
 
     Post-split shapes: Training features ~120k samples with 206 features; test features ~30k samples.
 
-25. IP Address Data Type Conversion, Sorting, and Saving
+## 25. IP Address Data Type Conversion, Sorting, and Saving
 
     Merged data saved successfully with no missing country values.
 
     Rows: 151,112; Columns: 21.
 
-26. User and Device ID Analysis
+## 26. User and Device ID Analysis
 
     151,112 unique user_ids confirm one transaction per user.
 
@@ -330,7 +330,7 @@ Saving the processed data is good practice to avoid reprocessing steps if the no
 
     Device usage frequency could be a useful fraud detection feature.
 
-27. Refined Timestamp Feature Engineering
+## 27. Refined Timestamp Feature Engineering
 
     Ensured purchase_time and signup_time are datetime objects.
 
@@ -340,11 +340,11 @@ Saving the processed data is good practice to avoid reprocessing steps if the no
 
     hours_since_signup remains a strong fraud indicator.
 
-28. Memory Optimization
+## 28. Memory Optimization
 
     Dropped original datetime columns after feature engineering to save memory.
 
-29. Risk Flag Features
+## 29. Risk Flag Features
 
     Created binary flags:
 
@@ -354,7 +354,7 @@ Saving the processed data is good practice to avoid reprocessing steps if the no
 
     These flags are aligned with common fraud heuristics and likely to improve model interpretability.
 
-30. Transactions by Hour of Day (Fraud vs Non-Fraud)
+## 30. Transactions by Hour of Day (Fraud vs Non-Fraud)
 
     Fraudulent transaction counts are lower overall but proportionally stable across hours.
 
@@ -362,7 +362,7 @@ Saving the processed data is good practice to avoid reprocessing steps if the no
 
     The off_hour_purchase flag remains useful despite this.
 
-31. Fraud by Account Age (Hours)
+## 31. Fraud by Account Age (Hours)
 
     Fraudulent transactions mostly occur soon after account creation.
 
@@ -370,7 +370,7 @@ Saving the processed data is good practice to avoid reprocessing steps if the no
 
     Confirms hours_since_signup is a highly discriminative feature.
 
-32. Class Imbalance Visualization and Resampling
+## 32. Class Imbalance Visualization and Resampling
 
     Original fraud rate: 9.4%.
 
@@ -378,7 +378,7 @@ Saving the processed data is good practice to avoid reprocessing steps if the no
 
     This reduces class imbalance and improves model training on fraud cases.
 
-33. Class Weights Calculation and Checkpoint Saving
+## 33. Class Weights Calculation and Checkpoint Saving
 
     Computed sample weights inversely proportional to class frequencies for balanced training.
 
