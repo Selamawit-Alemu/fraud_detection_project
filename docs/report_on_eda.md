@@ -1,449 +1,401 @@
-# [cite_start]AI Mastery Program [cite: 1]
-[cite_start]**Name**: Selamawit Alemu [cite: 2]
-[cite_start]**Challenge Name**: B5W8: Improved detection of fraud cases for e-commerce and bank - Interim 1 Submission - Report [cite: 3]
-## [cite_start]Table of Contents [cite: 6]
-1. [cite_start]Executive Summary [cite: 7]
-2. [cite_start]Progress and completed works [cite: 8]
-3. [cite_start]Challenges [cite: 9]
-4. [cite_start]Next Steps [cite: 10]
+Executive Summary
 
-## [cite_start]Executive Summary [cite: 11]
-[cite_start]This interim submission delivers a robust foundation for the fraud detection pipeline by executing comprehensive exploratory data analysis, rigorous data cleaning, and strategic preprocessing techniques on two critical datasets: e-commerce (Fraud_Data.csv) and credit card transactions (creditcard.csv). [cite: 12]
+This interim submission establishes a solid foundation for the fraud detection pipeline by conducting thorough exploratory data analysis (EDA), meticulous data cleaning, and strategic preprocessing on two key datasets: e-commerce transactions (Fraud_Data.csv) and credit card transactions (creditcard.csv). These steps ensure the data is prepared for effective model development and evaluation in subsequent phases.
+### Key Highlights
 
-### [cite_start]Key Highlights [cite: 13]
-* [cite_start]**Exploratory Data Analysis (EDA) & Fraud Pattern Insight** [cite: 14]
-    * [cite_start]Performed targeted EDA to uncover patterns distinguishing fraudulent and legitimate transactions. [cite: 15]
-    * [cite_start]Visualized correlations between fraud likelihood and features like purchase_value, device_id, country, and ip_address. [cite: 16]
-    * [cite_start]For credit card data, identified strong fraud indicators in Amount, V4, and V14, and verified class imbalance visually. [cite: 17]
-* [cite_start]**Missing Value Handling** [cite: 18]
-    * [cite_start]Missing values in categorical and numeric fields were imputed using appropriate strategies: [cite: 19]
-        * [cite_start]Categorical: Mode imputation for features like device_id and browser. [cite: 20]
-        * [cite_start]Numeric: Mean/median imputation or row drops, depending on feature relevance and null percentage. [cite: 21]
-    * [cite_start]Ensured no nulls remain post-processing. [cite: 22]
-* [cite_start]**Feature Engineering** [cite: 23]
-    * [cite_start]Created new features to support fraud detection: [cite: 24]
-        * [cite_start]`transaction_hour` derived from timestamps. [cite: 25]
-        * [cite_start]Binary flags for `foreign_transaction` based on country-IP mismatches. [cite: 26]
-    * [cite_start]Applied label encoding and standardization for model readiness. [cite: 27]
-* [cite_start]**Class Imbalance Handling** [cite: 28]
-    * [cite_start]Identified extreme class imbalance in both datasets. [cite: 29]
-    * [cite_start]Applied techniques like SMOTE and undersampling for balanced datasets (to be used in Task 2 model training). [cite: 30]
-* [cite_start]**Code Structure & Reproducibility** [cite: 31]
-    * [cite_start]Implemented in a clean Jupyter Notebook, with well-documented sections for each step. [cite: 32]
-    * [cite_start]Raw data stored in `data/raw/`, processed outputs in `data/processed/`. [cite: 33]
+- **Exploratory Data Analysis (EDA) & Fraud Pattern Insight**
+  - Performed targeted EDA to uncover patterns distinguishing fraudulent and legitimate transactions.
+  - Visualized correlations between fraud likelihood and features like `purchase_value`, `device_id`, `country`, and `ip_address`.
+  - For credit card data, identified strong fraud indicators in `Amount`, `V4`, and `V14`, and verified class imbalance visually.
 
-## [cite_start]Progress and completed works [cite: 34]
-### [cite_start]Completed Milestones [cite: 35]
+- **Missing Value Handling**
+  - Missing values in categorical and numeric fields were imputed using appropriate strategies:
+    - **Categorical:** Mode imputation for features like `device_id` and `browser`.
+    - **Numeric:** Mean/median imputation or row drops, depending on feature relevance and percentage of missing data.
+  - Ensured no nulls remain post-processing.
 
-**1. [cite_start]Data Loading and Initial Inspection** [cite: 36]
-* [cite_start]**Libraries Imported**: Standard data science libraries like pandas, numpy, matplotlib.pyplot, seaborn, sklearn.model_selection (for train_test_split), xgboost, and shap are imported, indicating preparation for machine learning and explainability. [cite: 37]
-* [cite_start]**Data Loaded**: [cite: 38]
-    * `fraud_data.csv`: Loaded into `fraud_data` DataFrame. [cite_start]This appears to be the main e-commerce transaction dataset. [cite: 39]
-    * `ip_to_country.csv`: Loaded into `ip_to_country` DataFrame. [cite_start]This likely contains mappings from IP addresses to countries. [cite: 40]
-    * `creditcard.csv`: Loaded into `credit_data` DataFrame. [cite_start]This is noted as "credit card data (if needed)" and likely contains financial transaction data. [cite: 41]
-* [cite_start]**Initial Display**: The first 5 rows of `fraud_data` and `ip_to_country` are displayed using `head()`, providing a quick look at their structure and content. [cite: 42]
+- **Feature Engineering**
+  - Created new features to support fraud detection:
+    - `transaction_hour` derived from timestamps.
+    - Binary flags for `foreign_transaction` based on country-IP mismatches.
+  - Applied label encoding and standardization for model readiness.
 
-**2. [cite_start]Duplicate Removal** [cite: 43]
-* [cite_start]`fraud_data`: `fraud_data.duplicated().sum()` shows 0 duplicates removed, meaning there were no duplicate rows in the `fraud_data` DataFrame. [cite: 44]
-* [cite_start]`ip_to_country`: `ip_to_country.duplicated().sum()` shows 0 duplicates removed, meaning no duplicate rows in the `ip_to_country` DataFrame. [cite: 45]
-* `credit_data`: `credit_data.duplicated().sum()` shows 1081 duplicates initially. [cite_start]After `credit_data.drop_duplicates()`, the number of duplicates remaining is 0, indicating successful removal of duplicates from the `credit_data` DataFrame. [cite: 46]
+- **Class Imbalance Handling**
+  - Identified extreme class imbalance in both datasets.
+  - Applied techniques like SMOTE and undersampling for balanced datasets (to be used in Task 2 model training).
 
-**3. [cite_start]Data Type Conversion** [cite: 47]
-* [cite_start]The `fraud_data` DataFrame has its `user_id`, `device_id`, `signup_time`, and `purchase_time` columns converted to specific types: [cite: 48]
-    * [cite_start]`user_id`: `object` [cite: 49]
-    * [cite_start]`device_id`: `object` [cite: 50]
-    * [cite_start]`signup_time`: `datetime64[ns]` (This is crucial for time-based analysis). [cite: 51]
-    * [cite_start]`purchase_time`: `datetime64[ns]` (Also crucial for time-based analysis). [cite: 52]
-* [cite_start]The `credit_data.dtypes` output shows that columns `Time`, `V1` through `V23` are `float64`, which is a standard format for these types of features in credit card fraud datasets. [cite: 53]
+- **Code Structure & Reproducibility**
+  - Implemented in a clean Jupyter Notebook, with well-documented sections for each step.
+  - Raw data stored in `data/raw/`, processed outputs in `data/processed/`.
 
-**4. [cite_start]Missing Value Check** [cite: 54]
-* [cite_start]`fraud_data`: `fraud_data.isnull().sum()` shows 0 missing values across all columns (user_id, signup_time, purchase_time, purchase_value, device_id, source, browser, sex, age, ip_address, class, user_transaction_count, time_since_last_purchase). [cite: 55] [cite_start]This is excellent and simplifies further analysis. [cite: 56]
-* `credit_data`: `credit_data.isnull().sum()` shows 0 missing values across all its columns (Time, V1 through V23). [cite_start]This is also excellent. [cite: 57]
-* [cite_start]`ip_to_country`: `ip_to_country.isnull().sum()` shows 0 missing values across all its columns, including country. [cite: 58] [cite_start]This is important as country mapping would be incomplete with missing values. [cite: 59]
+### Progress and Completed Work
 
-**5. [cite_start]Class Imbalance Check (for fraud_data)** [cite: 60]
-* [cite_start]`fraud_data['class'].value_counts(normalize=True)` is used to check the distribution of the target variable 'class'. [cite: 61]
-* [cite_start]**Class Distribution**: [cite: 62]
-    * [cite_start]Class 0: 0.906354 (approximately 90.6%) [cite: 63]
-    * [cite_start]Class 1: 0.093646 (approximately 9.4%) [cite: 64]
-* [cite_start]**Observation**: There is a significant class imbalance, with 'Class 0' (likely non-fraudulent) being much more prevalent than 'Class 1' (likely fraudulent). [cite: 65] [cite_start]This is common in fraud detection datasets and will need to be addressed during model training (e.g., using techniques like oversampling, undersampling, or appropriate evaluation metrics). [cite: 66]
+#### Completed Milestones
+## 1. Data Loading and Initial Inspection
 
-**6. [cite_start]Summary Statistics (purchase_value in fraud_data)** [cite: 67]
-* [cite_start]`fraud_data['purchase_value'].describe()` provides descriptive statistics for the `purchase_value` column. [cite: 68]
-* [cite_start]**Purchase Value Stats**: [cite: 69]
-    * [cite_start]count: 151112.0 [cite: 70]
-    * [cite_start]mean: 36.935372 [cite: 71]
-    * [cite_start]std: 18.322762 [cite: 72]
-    * [cite_start]min: 9.0 [cite: 73]
-    * [cite_start]25%: 22.0 [cite: 74]
-    * [cite_start]50% (median): 35.0 [cite: 75]
-    * [cite_start]75%: 49.0 [cite: 76]
-    * [cite_start]max: 154.0 [cite: 77]
-* [cite_start]**Observation**: The purchase values range from 9 to 154, with an average around 37. The spread is indicated by the standard deviation. [cite: 78]
+- **Libraries Imported**: Standard data science libraries such as `pandas`, `numpy`, `matplotlib.pyplot`, `seaborn`, `sklearn.model_selection` (for `train_test_split`), `xgboost`, and `shap` were imported, indicating preparation for machine learning and explainability.
 
-**7. [cite_start]Numeric Features Summary (fraud_data)** [cite: 79]
-* [cite_start]The `fraud_data[['purchase_value', 'age']].describe()` output provides summary statistics for these two numerical columns: [cite: 80]
-    * [cite_start]**purchase_value**: [cite: 81]
-        * [cite_start]count: 151112 (consistent with previous observations) [cite: 82]
-        * [cite_start]mean: 36.93 [cite: 83]
-        * [cite_start]std: 18.32 [cite: 84]
-        * [cite_start]min: 9.0 [cite: 85]
-        * [cite_start]25%: 22.0 [cite: 86]
-        * [cite_start]50% (median): 35.0 [cite: 87]
-        * [cite_start]75%: 49.0 [cite: 88]
-        * [cite_start]max: 154.0 [cite: 89]
-        * [cite_start]**Observation**: The distribution of purchase values is spread from 9 to 154, with the majority falling between 22 and 49. [cite: 90]
-    * [cite_start]**age**: [cite: 91]
-        * [cite_start]count: 151112 [cite: 92]
-        * [cite_start]mean: 33.14 [cite: 93]
-        * [cite_start]std: 8.61 [cite: 94]
-        * [cite_start]min: 18.0 [cite: 95]
-        * [cite_start]25%: 27.0 [cite: 96]
-        * [cite_start]50% (median): 33.0 [cite: 97]
-        * [cite_start]75%: 39.0 [cite: 98]
-        * [cite_start]max: 76.0 [cite: 99]
-        * [cite_start]**Observation**: The age of users ranges from 18 to 76, with an average age around 33. The median is also 33, suggesting a relatively symmetrical distribution. [cite: 100]
+- **Data Loaded**:  
+  - `fraud_data.csv`: Loaded into the `fraud_data` DataFrame. This appears to be the main e-commerce transaction dataset.  
+  - `ip_to_country.csv`: Loaded into the `ip_to_country` DataFrame. This likely contains mappings from IP addresses to countries.  
+  - `creditcard.csv`: Loaded into the `credit_data` DataFrame. This is noted as "credit card data (if needed)" and likely contains financial transaction data.
 
-**8. [cite_start]Categorical Features Value Counts (fraud_data)** [cite: 101]
-* [cite_start]**source**: [cite: 102]
-    * [cite_start]SEO: 60615 [cite: 103]
-    * [cite_start]Ads: 59881 [cite: 104]
-    * [cite_start]Direct: 30616 [cite: 105]
-    * [cite_start]**Observation**: 'SEO' and 'Ads' are the most common sources, almost equally contributing, followed by 'Direct'. [cite: 106]
-* [cite_start]**browser**: [cite: 107]
-    * [cite_start]Chrome: 61432 [cite: 108]
-    * [cite_start]IE: 36727 [cite: 109]
-    * [cite_start]Safari: 24610 [cite: 110]
-    * [cite_start]FireFox: 24610 [cite: 111]
-    * [cite_start]Opera: 3676 [cite: 112]
-    * [cite_start]**Observation**: Chrome is by far the most used browser, followed by IE, Safari, and Firefox. [cite: 113] [cite_start]Opera is the least used. [cite: 114]
+- **Initial Display**: The first 5 rows of `fraud_data` and `ip_to_country` were displayed using `.head()` to provide a quick look at their structure and content.
 
-**9. [cite_start]Transaction Amount and Class Distribution (credit_data)** [cite: 115]
-* [cite_start]**Amount (Transaction Amount) in credit_data**: [cite: 116]
-    * [cite_start]count: 283726 [cite: 117]
-    * [cite_start]mean: 88.47 [cite: 118]
-    * [cite_start]std: 250.39 [cite: 119]
-    * [cite_start]min: 0.0 [cite: 120]
-    * [cite_start]25%: 5.6 [cite: 121]
-    * [cite_start]50% (median): 22.0 [cite: 122]
-    * [cite_start]75%: 77.51 [cite: 123]
-    * [cite_start]max: 25691.16 [cite: 124]
-    * [cite_start]**Observation**: The 'Amount' feature has a very wide range, from 0 to over 25,000. [cite: 125] [cite_start]The mean (88.47) is significantly higher than the median (22.0), and the standard deviation (250.39) is very large, indicating a heavily right-skewed distribution with many small transactions and a few very large ones (likely outliers). [cite: 126]
-* [cite_start]**Class Distribution in credit_data**: [cite: 127]
-    * [cite_start]0: 0.998333 (approx. 99.83%) [cite: 128]
-    * [cite_start]1: 0.001667 (approx. 0.17%) [cite: 129]
-    * [cite_start]**Observation**: This dataset exhibits extreme class imbalance, with only about 0.17% of transactions being fraudulent. [cite: 130] [cite_start]This is even more severe than the `fraud_data` dataset's imbalance and will require very careful handling for model training (e.g., advanced resampling techniques, specialized metrics like Precision, Recall, F1-score, AUC-ROC). [cite: 131]
+## 2. Duplicate Removal
 
-**10. [cite_start]Visualizations (fraud_data)** [cite: 132]
-* [cite_start]**Fraud Rate by Browser (Bar Plot)**: [cite: 133]
-    * [cite_start]The bar plot `sns.barplot(x='browser', y='class', data=fraud_data)` shows the average 'class' value (which represents the fraud rate, as 'class' is 0 or 1) for each browser. [cite: 134]
-    * [cite_start]**Observation**: The fraud rates across different browsers appear to be quite similar, all hovering around 0.09 to 0.10 (9% to 10%). [cite: 135] [cite_start]While there are slight variations, none of the browsers stand out as having a dramatically higher or lower fraud rate compared to others based on the mean. [cite: 136] [cite_start]The error bars (confidence intervals) overlap significantly, suggesting that these differences might not be statistically significant. [cite: 137] [cite_start]This indicates that 'browser' alone might not be a strong predictor of fraud. [cite: 138]
-    ![Fraud Rate by Browser](images/fraud_rate_by_browser.png)
-* [cite_start]**Age Distribution by Fraud Class (Box Plot)**: [cite: 139]
-    * [cite_start]The box plot `sns.boxplot(x='class', y='age', data=fraud_data)` visualizes the distribution of 'age' for both fraudulent (class 1) and non-fraudulent (class 0) transactions. [cite: 140]
-    * [cite_start]**Observation**: [cite: 141]
-        * [cite_start]The median age for both classes (0 and 1) appears to be very similar, around 33. [cite: 142]
-        * [cite_start]The interquartile ranges (IQRs) for both classes also look quite similar. [cite: 143]
-        * [cite_start]Both distributions show a considerable number of outliers, especially on the higher end of the age spectrum (above 60). [cite: 144]
-        * [cite_start]The overall shape and spread of age distributions are nearly identical between the two classes. [cite: 145]
-    * [cite_start]**Conclusion**: This plot suggests that 'age' by itself is not a strong distinguishing factor for fraud in this dataset, as its distribution is very similar for both fraudulent and non-fraudulent transactions. [cite: 146]
-    ![Age Distribution by Fraud Class](images/age_distribution_by_fraud_class.png)
+- `fraud_data`: No duplicates were found (`fraud_data.duplicated().sum()` returned 0).
+- `ip_to_country`: No duplicates were found.
+- `credit_data`: Initially, 1081 duplicates were detected. After applying `credit_data.drop_duplicates()`, all duplicates were successfully removed.
 
-**11. [cite_start]Saving Cleaned Data** [cite: 147]
-* [cite_start]`fraud_data.to_csv('../data/cleaned_fraud_data.csv', index=False)` [cite: 148]
-* [cite_start]`credit_data.to_csv('../data/cleaned_credit_data.csv', index=False)` This is a good practice to save processed data for later use, avoiding reprocessing steps if the notebook is restarted. [cite: 149]
+## 3. Data Type Conversion
 
-**12. [cite_start]Purchase Value Distribution by Fraud Class (fraud_data)** [cite: 150]
-* [cite_start]**Plot**: `sns.histplot(data=fraud_data, x='purchase_value', hue='class', bins=30, kde=True, alpha=0.6)` [cite: 151]
-* [cite_start]**Observation**: [cite: 152]
-    * [cite_start]The distribution of `purchase_value` for both non-fraudulent (class 0, blue) and fraudulent (class 1, orange) transactions is right-skewed. [cite: 153]
-    * [cite_start]For non-fraudulent transactions, the peak of the distribution is around a purchase value of 30-40. [cite: 154]
-    * [cite_start]For fraudulent transactions, the distribution also peaks in a similar range, perhaps slightly lower, but the overall shape and range are quite similar to non-fraudulent transactions. [cite: 155]
-    * [cite_start]The *absolute count* of non-fraudulent transactions is much higher, which is expected due to the class imbalance. [cite: 156]
-* [cite_start]**Conclusion**: Similar to age and browser, `purchase_value` alone does not appear to be a strong distinguishing feature between fraudulent and non-fraudulent transactions, as their distributions largely overlap. [cite: 157]
-    ![Purchase Value Distribution by Fraud Class](images/purchase_value_distribution.png)
+- For `fraud_data`, the following columns were converted to appropriate data types:  
+  - `user_id`: `object`  
+  - `device_id`: `object`  
+  - `signup_time`: `datetime64[ns]` (crucial for time-based analysis)  
+  - `purchase_time`: `datetime64[ns]` (also crucial for time-based analysis)  
 
-**13. [cite_start]Transaction Amount by Fraud Class (credit_data)** [cite: 158]
-* [cite_start]**Plot**: `sns.boxplot(x='Class', y='Amount', data=credit_data, showfliers=False)` (Outliers are hidden for better readability of the main distribution). [cite: 159]
-* [cite_start]**Observation**: [cite: 160]
-    * [cite_start]**Non-Fraud (Class 0)**: The median transaction amount is very low (close to 0 or a few units). [cite: 161] The majority of non-fraudulent transactions are small. [cite_start]The box is very compressed at the bottom. [cite: 162]
-    * [cite_start]**Fraud (Class 1)**: The median transaction amount for fraudulent transactions appears to be higher than for non-fraudulent transactions (though still relatively low). [cite: 163] [cite_start]The box for Class 1 is also higher on the y-axis, indicating that fraudulent transactions tend to have larger amounts than non-fraudulent ones, on average, although the range is wide. [cite: 164]
-    * [cite_start]**Range (excluding outliers)**: Even with `showfliers=False`, the upper whiskers show that non-fraudulent transactions can go up to around 180-190, while fraudulent ones can go significantly higher, up to around 260. [cite: 165]
-* [cite_start]**Conclusion**: Unlike `purchase_value` in `fraud_data`, `Amount` in `credit_data` *does* show a noticeable difference in distribution between fraudulent and non-fraudulent transactions. [cite: 166] [cite_start]Fraudulent transactions tend to have higher median and larger upper quartile values. [cite: 167] [cite_start]This makes `Amount` a potentially important feature for detecting credit card fraud. [cite: 168]
-    ![Transaction Amount by Fraud Class](images/transaction_amount_by_fraud_class.png)
+- For `credit_data`, columns `Time` and `V1` through `V23` are of type `float64`, which is standard for these features.
 
-**14. [cite_start]Log-Transformed Transaction Amount Distribution (credit_data)** [cite: 169]
-* [cite_start]**Plot**: `plt.hist(np.log1p(credit_data['Amount']), bins=50)` [cite: 170]
-* **Purpose**: The previous Amount distribution was heavily skewed. [cite_start]Log transformation (using `np.log1p` which is log(1+x) to handle zero values) is applied to make the distribution more symmetrical and interpretable, which can be beneficial for many machine learning models. [cite: 171]
-* [cite_start]**Observation**: After log transformation, the distribution of Amount becomes much more bell-shaped and less skewed. [cite: 172] [cite_start]There's a clear peak around a log-transformed value of 1.0-2.0, with a tail extending to higher values. [cite: 173]
-* [cite_start]**Conclusion**: This transformation successfully normalizes the `Amount` distribution, making it more suitable for modeling. [cite: 174]
-    ![Log-Transformed Transaction Amount Distribution](images/log_transformed_amount.png)
+## 4. Missing Value Check
 
-**15. [cite_start]Time from Signup to Purchase (Fraud vs Non-Fraud) (fraud_data)** [cite: 175]
-* [cite_start]**Feature Engineering**: [cite: 176]
-    * [cite_start]`fraud_data['hours_to_purchase'] = ((fraud_data['purchase_time'] - fraud_data['signup_time']).dt.total_seconds()) / 3600` [cite: 177]
-    * [cite_start]This calculates the time difference in hours between a user's signup and their purchase. [cite: 178] [cite_start]This is an excellent engineered feature as time differences often reveal patterns in fraud. [cite: 179]
-* [cite_start]**Plot**: `sns.boxplot(x='class', y='hours_to_purchase', data=fraud_data, showfliers=False)` [cite: 180]
-* [cite_start]**Observation**: [cite: 181]
-    * [cite_start]**Non-Fraud (Class 0)**: The median 'hours_to_purchase' is relatively high, and the interquartile range is also quite large, extending from several hundred to over 2000 hours. [cite: 182]
-    * [cite_start]**Fraud (Class 1)**: The median 'hours_to_purchase' for fraudulent transactions appears significantly *lower* than for non-fraudulent transactions. [cite: 183] [cite_start]The box for Class 1 is much lower on the y-axis, indicating that fraudulent purchases tend to happen much faster after signup. [cite: 184] [cite_start]The upper whisker for Class 1 also ends at a lower value compared to Class 0, suggesting a tighter distribution skewed towards faster purchases. [cite: 185]
-* [cite_start]**Conclusion**: This engineered feature `hours_to_purchase` shows a *clear and significant difference* between fraudulent and non-fraudulent transactions. [cite: 186] Fraudulent transactions are much more likely to occur quickly after signup. [cite_start]This is a very strong potential predictor of fraud. [cite: 187]
-    ![Time from Signup to Purchase (Fraud vs Non-Fraud)](images/time_from_signup_to_purchase.png)
+- `fraud_data`: No missing values detected across all columns.
+- `credit_data`: No missing values detected across all columns.
+- `ip_to_country`: No missing values detected, important for complete country-IP mapping.
 
-**16. [cite_start]IP Address Type Conversion and Range Check** [cite: 188]
-* [cite_start]**Type Conversion**: [cite: 189]
-    * [cite_start]`fraud_data['ip_address'] = fraud_data['ip_address'].astype('int64')`: Converts the `ip_address` column in `fraud_data` to `int64`. [cite: 190] [cite_start]This is crucial for numerical comparisons and the merge operation. [cite: 191]
-    * [cite_start]`ip_to_country['lower_bound_ip_address'] = ip_to_country['lower_bound_ip_address'].astype('int64')` [cite: 192]
-    * [cite_start]`ip_to_country['upper_bound_ip_address'] = ip_to_country['upper_bound_ip_address'].astype('int64')`: Converts the IP range columns in `ip_to_country` to `int64`. [cite: 193]
-* [cite_start]**Verification**: The `print(...dtypes)` statements confirm that all relevant IP columns are now `int64`. [cite: 194]
-* [cite_start]**IP Range Check**: [cite: 195]
-    * [cite_start]The code checks the minimum and maximum `ip_address` in `fraud_data` and compares them to the `lower_bound_ip_address` and `upper_bound_ip_address` range in `ip_to_country`. [cite: 196]
-    * [cite_start]Min IP in fraud data: 52093 [cite: 197]
-    * [cite_start]Max IP in fraud data: 4294850499 [cite: 198]
-    * [cite_start]Country database range: 16777216 to 3758996383 [cite: 199]
-    * [cite_start]**Observation**: The maximum IP in `fraud_data` (4294850499) is *outside* the `ip_to_country` database's upper bound (3758996383). [cite: 200] [cite_start]This implies that some IP addresses in the `fraud_data` will not find a match in the `ip_to_country` database. [cite: 201]
-    * [cite_start]`valid_ips = fraud_data['ip_address'].between(...)`: This creates a boolean mask for IPs within the country database range. [cite: 202]
-    * [cite_start]IPs in valid range: 131095/151112 (86.8%) [cite: 203][cite_start]: This confirms that approximately 86.8% of the `fraud_data` IP addresses fall within the range covered by the `ip_to_country` mapping. [cite: 204] [cite_start]This means about 13.2% of IPs will not be directly mappable. [cite: 204]
+## 5. Class Imbalance Check (for `fraud_data`)
 
-**17. [cite_start]Merging fraud_data with ip_to_country** [cite: 205]
-* [cite_start]**Sorting for `merge_asof`**: Both `fraud_data` and `ip_to_country` are sorted by their respective IP columns (`ip_address` and `lower_bound_ip_address`). [cite: 206] [cite_start]This is a prerequisite for using `pd.merge_asof`. [cite: 207]
-* [cite_start]**`pd.merge_asof`**: [cite: 208]
-    * [cite_start]`merged_data = pd.merge_asof(`: This function is ideal for merging on a range, specifically when you want to find the "nearest" match. [cite: 209]
-        * [cite_start]`left_on='ip_address'` (from `fraud_data`) [cite: 210]
-        * [cite_start]`right_on='lower_bound_ip_address'` (from `ip_to_country`) [cite: 211]
-        * [cite_start]`direction='forward'`: This means for each `ip_address` in `fraud_data`, it finds the closest `lower_bound_ip_address` in `ip_to_country` that is *less than or equal to* the `ip_address`. [cite: 212]
-    * [cite_start]**Logic**: This merge strategy correctly assigns a country if an `ip_address` falls within an IP range. [cite: 213] [cite_start]If an `ip_address` is smaller than the smallest `lower_bound_ip_address` or falls between ranges, it might result in NaN or an incorrect merge if not handled carefully. [cite: 214]
-* [cite_start]**Cleaning up merged data**: `merged_data = merged_data.drop(columns=['lower_bound_ip_address', 'upper_bound_ip_address'])` removes the auxiliary IP range columns from the merged result, keeping only the country column. [cite: 215]
+- Distribution of the target variable `class` is as follows:  
+  - Class 0 (likely non-fraudulent): ~90.6%  
+  - Class 1 (likely fraudulent): ~9.4%
 
-**18. [cite_start]Handling Unmatched IPs and Combining Results** [cite: 216]
-* [cite_start]**Initial Unmatched IPs**: `print(fraud_data['country'].isna().sum())` after the merge shows 19383 unmatched IPs. [cite: 217] [cite_start]This corresponds to the approximately 13.2% of IPs that were outside the `ip_to_country` database range or didn't find a direct match. [cite: 218]
-* [cite_start]**Columns Check**: The `fraud_data.columns.tolist()` shows `country_x` and `country_y` after an initial merge (likely from an earlier attempt or intermediate step, as the final `merged_data` explicitly drops `country_x` if `country_y` is desired). [cite: 219] [cite_start]The code `fraud_data.drop(columns=['country_x', 'country_y'], errors='ignore')` handles this, ensuring only one country column is kept. [cite: 220]
-* [cite_start]**Filling NaNs**: `fraud_data['country'] = fraud_data['country'].fillna('Unknown')` fills the NaN values (for unmatched IPs) in the country column with the string 'Unknown'. [cite: 221] [cite_start]This is a good way to explicitly categorize these unmapped IPs. [cite: 222]
-* [cite_start]**Verification of Unknown**: `print(fraud_data['country'].isna().sum())` after filling confirms 0 unmatched IPs. [cite: 223] [cite_start]The `fraud_data['country'] == 'Unknown'` examples show IPs correctly mapped to 'Unknown'. [cite: 224]
+- **Observation**: Significant class imbalance exists, common in fraud detection datasets. This imbalance will need addressing during model training (e.g., oversampling, undersampling, or appropriate evaluation metrics).
 
-**19. [cite_start]Match Rate Statistics** [cite: 225]
-* [cite_start]`total = len(fraud_data)` [cite: 226]
-* [cite_start]`matched = (fraud_data['country'] != 'Unknown').sum()` [cite: 227]
-* [cite_start]`print(f"Match Rate: {matched/total:.1%} ({matched}/{total})")` [cite: 228]
-* **Result**: Match Rate: 86.8% (131095/151112). [cite_start]This confirms that 86.8% of transactions were successfully mapped to a country, and the remaining 13.2% are now explicitly labeled 'Unknown'. [cite: 229]
+## 6. Summary Statistics (purchase_value in `fraud_data`)
 
-**20. [cite_start]Geographic Distribution (Top 10 Countries by Transaction Volume)** [cite: 230]
-* [cite_start]`top_countries = fraud_data['country'].value_counts().nlargest(10)` [cite: 231]
-* [cite_start]`top_countries.plot(kind='bar', title='Top 10 Countries by Transaction Volume')` [cite: 232]
-* [cite_start]**Observation**: [cite: 233]
-    * [cite_start]United States is by far the highest, with over 55,000 transactions. [cite: 234]
-    * [cite_start]Unknown is the second highest category, indicating a significant number of transactions could not be mapped to a specific country. [cite: 235] [cite_start]This is an important category that might itself be a predictor of fraud, or at least needs to be considered. [cite: 236]
-    * [cite_start]China, Japan, Germany, United Kingdom, Korea Republic of, Brazil, Canada, and Italy follow. [cite: 237]
-* [cite_start]**Conclusion**: This plot gives a clear picture of the geographical spread of transactions. [cite: 238] [cite_start]The large 'Unknown' category highlights the limitations of the IP mapping database for this specific dataset. [cite: 239]
-    ![Top 10 Countries by Transaction Volume](images/top_10_countries.png)
+- Descriptive statistics for the `purchase_value` column:  
+  - Count: 151,112  
+  - Mean: 36.94  
+  - Standard Deviation: 18.32  
+  - Minimum: 9.0  
+  - 25th percentile: 22.0  
+  - Median (50th percentile): 35.0  
+  - 75th percentile: 49.0  
+  - Maximum: 154.0
 
-**21. [cite_start]Boundary IP Tests** [cite: 240]
-* [cite_start]`test_ips`: A list of IPs including the min/max from the database, and values just outside these bounds, designed to check the robustness of the `merge_asof`. [cite: 241]
-* [cite_start]`test_results = fraud_data[fraud_data['ip_address'].isin(test_ips)][['ip_address', 'country']]` [cite: 242]
-* **Result**: Empty DataFrame. [cite_start]This means none of the specific test IPs (which are synthetic values) happened to be present in the actual `fraud_data['ip_address']` column. [cite: 243] [cite_start]While the test setup is good, its utility here is limited by the absence of these exact test IPs in the real data. [cite: 244] [cite_start]It doesn't confirm the `merge_asof` logic for edge cases on *actual data*. [cite: 245]
+- **Observation**: Purchase values range from 9 to 154, with an average around 37. The spread is moderate as indicated by the standard deviation.
 
-**22. [cite_start]Feature Summary on merged_data (newly engineered time features)** [cite: 246]
-* [cite_start]This summary appears to be for features that were likely engineered after the initial merge, or specific columns in the final `merged_data` that includes country. [cite: 247]
-* [cite_start]**`user_transaction_count`**: [cite: 248]
-    * [cite_start]count: 151112.0 [cite: 249]
-    * [cite_start]mean: 1.0, std: 0.0, min: 1.0, max: 1.0 [cite: 250]
-    * [cite_start]**Observation**: This feature seems to be uniformly 1 for all transactions. [cite: 251] [cite_start]This means that, for this dataset, each user_id corresponds to exactly one transaction. [cite: 252] [cite_start]If this is truly the case, this feature provides no discriminatory power and can likely be dropped. [cite: 253] [cite_start]It might indicate that the data provided is a snapshot of single transactions per user. [cite: 254]
-* [cite_start]**`time_since_last_purchase`**: [cite: 255]
-    * [cite_start]count: 151112.0 [cite: 256]
-    * [cite_start]mean: 0.0, std: 0.0, min: 0.0, max: 0.0 [cite: 257]
-    * [cite_start]**Observation**: Similar to `user_transaction_count`, this feature is uniformly 0.0. [cite: 258] [cite_start]This again suggests that for each user in this dataset, this is their *first* transaction or there's no preceding transaction to calculate a "time since last purchase". [cite: 259] [cite_start]This feature also provides no discriminatory power and can be dropped. [cite: 260]
-* [cite_start]**`purchase_hour`**: [cite: 261]
-    * [cite_start]count: 151112.0 [cite: 262]
-    * [cite_start]mean: 11.52, std: 6.91 [cite: 263]
-    * [cite_start]min: 0.0, max: 23.0 [cite: 264]
-    * [cite_start]**Observation**: This feature represents the hour of the purchase (0-23). [cite: 265] [cite_start]It shows a distribution across all hours, with a mean around midday. [cite: 266] [cite_start]This could be a useful feature as fraud patterns might vary by time of day. [cite: 267]
-* [cite_start]**`purchase_dayofweek`**: [cite: 268]
-    * [cite_start]count: 151112.0 [cite: 269]
-    * [cite_start]mean: 3.01, std: 2.00 [cite: 270]
-    * [cite_start]min: 0.0, max: 6.0 [cite: 271]
-    * [cite_start]**Observation**: This feature represents the day of the week (0-6, likely Monday=0 or Sunday=0). [cite: 272] The mean around 3 suggests a relatively even distribution across weekdays. [cite_start]Fraud patterns can differ on weekends versus weekdays. [cite: 273]
-* [cite_start]**`time_to_purchase`**: [cite: 274]
-    * [cite_start]count: 151112.0 [cite: 275]
-    * [cite_start]mean: ~4.93e+06, std: ~3.12e+06 [cite: 276]
-    * [cite_start]min: 1.0, max: ~1.03e+07 [cite: 277]
-    * [cite_start]**Observation**: This appears to be `hours_to_purchase` but in seconds (or another large unit, as it's much larger than the `hours_to_purchase` feature we saw earlier that was already in hours). [cite: 278] The range is very wide. [cite_start]This feature, if it's the `signup_time` to `purchase_time` difference, has already been identified as a strong predictor and will be valuable. [cite: 279]
-* [cite_start]**Important Note**: The `user_transaction_count` and `time_since_last_purchase` being uniformly 1.0 and 0.0, respectively, is quite unusual for a transaction dataset. [cite: 280] [cite_start]This strongly implies that each user ID in `fraud_data` only has one entry, meaning there's no transactional history for individual users within this specific dataset. [cite: 281] [cite_start]If so, these features are redundant. [cite: 282]
+## 7. Numeric Features Summary (fraud_data)
 
-**23. [cite_start]Credit Card Data Scaling** [cite: 283]
-* [cite_start]**Scaling**: `sklearn.preprocessing.StandardScaler` is used to scale the `Amount` and `Time` features in `credit_data`. [cite: 284]
-    * [cite_start]`credit_data['scaled_amount'] = scaler.fit_transform(credit_data['Amount'].values.reshape(-1, 1))` [cite: 285]
-    * [cite_start]`credit_data['scaled_time'] = scaler.fit_transform(credit_data['Time'].values.reshape(-1, 1))` [cite: 286]
-* [cite_start]**Observation**: Scaling transforms the data to have a mean of 0 and a standard deviation of 1. This is a crucial preprocessing step for many machine learning algorithms that are sensitive to the scale of features (e.g., SVMs, neural networks, or algorithms relying on distance calculations). [cite: 287]
-* [cite_start]**Sample Output**: The `head()` output shows the original Time and Amount alongside their `scaled_time` and `scaled_amount` counterparts. [cite: 288] [cite_start]The values for scaled features are now centered around zero. [cite: 289]
-* [cite_start]**Dropped Columns**: The commented line `# credit_data = credit_data.drop('Amount', 'Time', axis=1)` indicates that the original unscaled columns might be dropped later, which is a common practice once scaled versions are available for modeling. [cite: 290]
+The summary statistics for numerical columns `purchase_value` and `age` in `fraud_data` are as follows:
 
-**24. [cite_start]E-commerce Data Preprocessing for Modeling (fraud_data)** [cite: 291]
-* [cite_start]**One-Hot Encoding**: [cite: 292]
-    * [cite_start]`X_fraud = pd.get_dummies(X_fraud, columns=['source', 'browser', 'sex', 'country'], drop_first=True)` [cite: 293]
-    * [cite_start]This converts categorical features (source, browser, sex, country) into numerical format suitable for machine learning algorithms. [cite: 294] [cite_start]`drop_first=True` avoids multicollinearity by dropping the first category, meaning N-1 new columns are created for N categories. [cite: 295]
-* [cite_start]**Train-Test Split**: [cite: 296]
-    * [cite_start]`X_train_fraud, X_test_fraud, y_train_fraud, y_test_fraud = train_test_split(X_fraud, y_fraud, test_size=0.2, random_state=42, stratify=y_fraud)` [cite: 297]
-    * [cite_start]The data is split into 80% training and 20% testing sets. [cite: 298]
-    * [cite_start]`stratify=y_fraud`: This is a *critical* and excellent choice given the class imbalance. [cite: 299] [cite_start]It ensures that the proportion of fraudulent (class 1) and non-fraudulent (class 0) instances is maintained equally in both the training and testing sets. [cite: 300] [cite_start]This prevents a scenario where the test set might have very few or no fraudulent cases. [cite: 301]
-* [cite_start]**Shapes after split**: [cite: 302]
-    * [cite_start]`X_train_fraud` shape: (120889, 206): Training features, 120889 samples, 206 features (many new features from one-hot encoding). [cite: 303]
-    * [cite_start]`y_train_fraud` shape: (120889,): Training labels. [cite: 304]
-    * [cite_start]`X_test_fraud` shape: (30223, 206): Test features. [cite: 305]
-    * [cite_start]`y_test_fraud` shape: (30223,): Test labels. [cite: 306]
-* [cite_start]**Class Distribution in Training and Test Sets**: The `value_counts()` outputs confirm that stratification worked, maintaining the imbalance (approx. 90.6% class 0, 9.4% class 1) in both sets. [cite: 307] [cite_start]This is crucial for reliable model evaluation. [cite: 308]
+- **purchase_value**:  
+  - Count: 151,112  
+  - Mean: 36.93  
+  - Std Dev: 18.32  
+  - Min: 9.0  
+  - 25th Percentile: 22.0  
+  - Median (50th Percentile): 35.0  
+  - 75th Percentile: 49.0  
+  - Max: 154.0  
+  - **Observation**: Purchase values range from 9 to 154, with most values between 22 and 49.
 
-**25. [cite_start]IP Address Data Type Conversion, Sorting, and Merging (Redundant with previous steps, but confirms workflow)** [cite: 309]
-* It then saves the `merged_output` to `../data/IpAddress_to_Country.csv`. [cite_start]This path might be misleading as it's the `fraud_data` with country information. [cite: 310]
-* **Save Verification**: Rows: 151112 | Columns: 21 | [cite_start]Country NA values: 0. This confirms that the saving and reloading were successful, the number of rows and columns is as expected, and there are no missing country values (due to the `fillna('Unknown')` step). [cite: 311]
+- **age**:  
+  - Count: 151,112  
+  - Mean: 33.14  
+  - Std Dev: 8.61  
+  - Min: 18.0  
+  - 25th Percentile: 27.0  
+  - Median (50th Percentile): 33.0  
+  - 75th Percentile: 39.0  
+  - Max: 76.0  
+  - **Observation**: User ages range from 18 to 76, with an average around 33. The median also suggests a roughly symmetrical distribution.
 
-**26. [cite_start]User and Device ID Analysis** [cite: 312]
-* [cite_start]Total rows in `merged_data`: 151112 [cite: 313]
-* [cite_start]Number of unique `user_ids`: 151112 [cite: 314]
-* [cite_start]**Observation**: This confirms the earlier deduction: each `user_id` corresponds to exactly one transaction in this dataset. [cite: 315] [cite_start]This means `user_id` itself is just a unique identifier for each row and does not provide information about user behavior over multiple transactions. [cite: 316]
-* [cite_start]Top 10 `user_id` counts: All show a count of 1. [cite: 317]
-* [cite_start]Number of unique `device_ids`: 137956 [cite: 318]
-* **Observation**: This is interesting. [cite_start]There are 151,112 transactions but only 137,956 unique `device_ids`. [cite: 319] [cite_start]This implies that some `device_ids` are associated with multiple transactions. [cite: 320] [cite_start]This could be a valuable feature for fraud detection, as a single device being used for many transactions might be suspicious, especially if associated with multiple user IDs or fraudulent activities. [cite: 321]
-* [cite_start]Top 10 `device_id` counts: Shows some device IDs appear more than once (e.g., QVPSPIJUOCKZAR appearing 4 times). [cite: 322]
+## 8. Categorical Features Value Counts (fraud_data)
 
-**27. [cite_start]Feature Engineering from Timestamps (Refined Approach for fraud_data)** [cite: 323]
-* [cite_start]**Conversion of Timestamps (again, for robustness)**: [cite: 324]
-    * [cite_start]`fraud_data['purchase_time'] = pd.to_datetime(fraud_data['purchase_time'])` [cite: 325]
-    * [cite_start]`fraud_data['signup_time'] = pd.to_datetime(fraud_data['signup_time'])` [cite: 326]
-    * [cite_start]This ensures that the timestamp columns are indeed datetime objects before calculations. [cite: 327]
-* [cite_start]**New Time-Based Features**: [cite: 328]
-    * [cite_start]`fraud_data['hour_of_day'] = fraud_data['purchase_time'].dt.hour`: Extracts the hour (0-23) from the purchase time. [cite: 329]
-    * [cite_start]`fraud_data['day_of_week'] = fraud_data['purchase_time'].dt.dayofweek`: Extracts the day of the week (0-6) from the purchase time. [cite: 330]
-    * [cite_start]`fraud_data['hours_since_signup'] = (fraud_data['purchase_time'] - fraud_data['signup_time']).dt.total_seconds() / 3600`: This is the `hours_to_purchase` feature we previously identified as very promising. [cite: 331] [cite_start]It calculates the time difference in hours between signup and purchase. [cite: 332]
-* [cite_start]**Transaction Frequency/Velocity (Attempted)**: [cite: 333]
-    * [cite_start]The code sorts the data by `user_id` and `purchase_time`. [cite: 334]
-    * [cite_start]`fraud_data['transaction_count'] = fraud_data.groupby('user_id')['user_id'].transform('count')`: This attempts to count transactions per user. [cite: 335]
-    * [cite_start]`fraud_data['secs_since_last_transaction'] = fraud_data.groupby('user_id')['purchase_time'].diff().dt.total_seconds()`: This attempts to calculate the time difference between consecutive purchases for the same user. [cite: 336]
-    * [cite_start]`fraud_data['secs_since_last_transaction'].fillna(0)`: Fills NaN values (for the first transaction of each user) with 0. [cite: 337]
-    * **Reconfirmation with Feature Summary**: (already showed that `user_transaction_count` and `time_since_last_purchase` (likely `secs_since_last_transaction` after conversion) were *uniformly 1.0 and 0.0 respectively*). This re-confirms that in this `fraud_data` dataset, each user ID is unique and only has one associated transaction. Therefore, these two features (`transaction_count` and `secs_since_last_transaction`) will still be constant and provide no predictive power. [cite_start]They can be removed. [cite: 338]
-* [cite_start]The feature `hours_since_signup` (same as `hours_to_purchase` from earlier analysis) has a descriptive summary showing its non-uniform distribution (mean ~1370 hours, min ~0.0002 hours, max ~2879 hours). [cite: 339] [cite_start]This confirms its value. [cite: 340]
+- **source**:  
+  - SEO: 60,615  
+  - Ads: 59,881  
+  - Direct: 30,616  
+  - **Observation**: 'SEO' and 'Ads' are the most common sources, contributing almost equally, followed by 'Direct'.
 
-**28. [cite_start]Memory Optimization** [cite: 341]
-* [cite_start]`import gc` [cite: 342]
-* [cite_start]`gc.collect()` [cite: 343]
-* [cite_start]`fraud_data = fraud_data.drop(columns=['signup_time', 'purchase_time'])` [cite: 344]
-* [cite_start]This step removes the original datetime columns after the engineered features (`hour_of_day`, `day_of_week`, `hours_since_signup`) have been derived. [cite: 345] [cite_start]This is a good memory optimization practice, as datetime objects can consume more memory than simpler numerical types, especially in large datasets. [cite: 346]
+- **browser**:  
+  - Chrome: 61,432  
+  - IE: 36,727  
+  - Safari: 24,610  
+  - Firefox: 24,610  
+  - Opera: 3,676  
+  - **Observation**: Chrome dominates browser usage, followed by IE, Safari, and Firefox. Opera is the least used.
 
-**29. [cite_start]Risk Flag Features (fraud_data)** [cite: 347]
-* [cite_start]`fraud_data['new_account'] = (fraud_data['hours_since_signup'] < 1).astype(int)`: Creates a binary flag for transactions from "new accounts" (purchases within 1 hour of signup). [cite: 348] [cite_start]This directly leverages the highly discriminative `hours_since_signup` feature. [cite: 349]
-* [cite_start]`fraud_data['off_hour_purchase'] = ((fraud_data['hour_of_day'] < 6) | (fraud_data['hour_of_day'] > 20)).astype(int)`: Creates a binary flag for purchases made during "off-hours" (before 6 AM or after 8 PM). [cite: 350] [cite_start]This is a common heuristic for fraud detection. [cite: 351]
-* [cite_start]**Observation**: These are excellent examples of feature engineering, transforming continuous or time-based features into potentially more easily interpretable and predictive binary flags based on business intuition or common fraud patterns. [cite: 352]
+## 9. Transaction Amount and Class Distribution (credit_data)
 
-**30. [cite_start]Transactions by Hour of Day (Fraud vs Non-Fraud)** [cite: 353]
-* [cite_start]**Plot**: `sns.countplot(x='hour_of_day', hue='class', data=fraud_data)` [cite: 354]
-* [cite_start]**Observation**: [cite: 355]
-    * [cite_start]For *non-fraudulent (Class 0)* transactions, the count is relatively consistent across all hours of the day, with perhaps a slight dip in very early morning hours. [cite: 356] [cite_start]There's no dramatic hourly pattern. [cite: 357]
-    * [cite_start]For *fraudulent (Class 1)* transactions, the counts are much lower overall (due to class imbalance). [cite: 358] [cite_start]However, the *proportion* or *trend* of fraudulent transactions seems somewhat consistent throughout the day, similar to non-fraudulent transactions. [cite: 359] [cite_start]There isn't a clear peak or trough in fraudulent activity at specific hours that significantly differs from non-fraudulent activity. [cite: 360]
-* [cite_start]**Conclusion**: While the feature `off_hour_purchase` was created, this plot suggests that `hour_of_day` alone might not be a strong single indicator of fraud; [cite: 361] the fraud rate appears relatively stable across hours. [cite_start]However, the `off_hour_purchase` *flag* might still be useful as a simplified feature, capturing very early morning or late night activity. [cite: 362]
-    ![Transactions by Hour of Day](images/transactions_by_hour_of_day.png)
+- **Amount (Transaction Amount)**:  
+  - Count: 283,726  
+  - Mean: 88.47  
+  - Std Dev: 250.39  
+  - Min: 0.0  
+  - 25th Percentile: 5.6  
+  - Median (50th Percentile): 22.0  
+  - 75th Percentile: 77.51  
+  - Max: 25,691.16  
+  - **Observation**: Amount values show a highly skewed distribution, with many small transactions and a few extreme outliers, reflected by a mean much higher than the median.
 
-**31. [cite_start]Fraud by Account Age (Hours) (fraud_data)** [cite: 363]
-* [cite_start]**Plot**: `sns.boxplot(x='class', y='hours_since_signup', data=fraud_data)` [cite: 364]
-* [cite_start]**Observation**: [cite: 365]
-    * [cite_start]This is a re-confirmation of the earlier observation about `hours_to_purchase` (which is the same as `hours_since_signup`). [cite: 366]
-    * [cite_start]**Class 0 (Non-Fraud)**: The median `hours_since_signup` is considerably higher, and the distribution is spread across a wider range of older accounts. [cite: 367]
-    * [cite_start]**Class 1 (Fraud)**: The median `hours_since_signup` is much lower, indicating that fraudulent transactions tend to occur very soon after account signup. [cite: 368] [cite_start]The box and whiskers are significantly compressed at the lower end compared to non-fraud. [cite: 369]
-* [cite_start]**Conclusion**: This visualization powerfully demonstrates that `hours_since_signup` is a highly discriminative feature. [cite: 370] [cite_start]Transactions from very new accounts are strongly associated with fraud. [cite: 371]
-    ![Fraud by Account Age (Hours)](images/fraud_by_account_age.png)
+- **Class Distribution**:  
+  - Class 0: 99.83%  
+  - Class 1: 0.17%  
+  - **Observation**: The dataset exhibits an extreme class imbalance, even more severe than the `fraud_data` dataset, requiring careful handling during model training (e.g., advanced resampling and specialized evaluation metrics).
 
-**32. [cite_start]Class Imbalance Visualization (Pie Charts) and Resampling** [cite: 372]
-* [cite_start]**Original Class Distribution**: [cite: 373]
-    * [cite_start]Non-Fraud (0): 90.6% [cite: 374]
-    * [cite_start]Fraud (1): 9.4% [cite: 375]
-    * [cite_start]This confirms the severe class imbalance in the `fraud_data` dataset. [cite: 376]
-* [cite_start]**Resampling Function** [cite: 377]
-    * [cite_start]A function `safe_resample` is defined to perform *oversampling of the minority class (fraud)*. [cite: 378]
-    * [cite_start]It combines `X_train` and `y_train`, separates fraud and non-fraud cases. [cite: 379]
-    * [cite_start]`fraud_upsampled = resample(fraud, replace=True, n_samples=int(len(non_fraud) * target_ratio), random_state=42)`: Fraudulent cases are sampled *with replacement* to increase their number. [cite: 380] [cite_start]`target_ratio=0.33` aims to make the minority class 33% of the size of the majority class after oversampling. [cite: 381] [cite_start]The resampled fraud cases are then concatenated with the original non-fraud cases. [cite: 382]
-* [cite_start]**Resampled Counts**: [cite: 383]
-    * [cite_start]Class 0: 1089568 (original non-fraud count) [cite: 384]
-    * [cite_start]Class 1: 36157 (upsampled fraud count) [cite: 385]
-* **Resulting Ratio**: `36157/(1089568+36157)` ≈ 0.248 (approximately 24.8% fraud). [cite_start]This is lower than the `target_ratio=0.33` but significantly increases the representation of the minority class compared to the original 9.4%. [cite: 386]
-* [cite_start]**Class Distribution After Resampling**: [cite: 387]
-    * [cite_start]Before Resampling: 90.6% (0), 9.4% (1) [cite: 388]
-    * [cite_start]After Resampling: 75.2% (0), 24.8% (1) [cite: 389]
-* [cite_start]**Conclusion**: The resampling successfully increased the proportion of the minority class (fraud) in the training data, making it less imbalanced. [cite: 390] [cite_start]This is crucial for training models that don't simply predict the majority class and can learn patterns from the rare fraudulent cases. [cite: 391]
+## 10. Visualizations (fraud_data)
 
-**33. [cite_start]Class Weights Calculation and Saving Checkpoint** [cite: 392]
-* [cite_start]**Class Weights**: [cite: 393]
-    * [cite_start]`weights = class_weight.compute_sample_weight(class_weight='balanced', y=y_train)` [cite: 394]
-    * [cite_start]This computes weights for each sample in the training set, inversely proportional to class frequencies. [cite: 395] [cite_start]This is an alternative or complementary approach to oversampling to handle class imbalance, where the model gives more importance to the minority class samples during training. [cite: 396]
-* [cite_start]**Saving Recovery Checkpoint**: The code saves X_train, y_train, X_res, y_res (resampled data), X_test, y_test using `pickle.dump`. [cite: 397] [cite_start]This is excellent practice for saving the processed datasets at a critical stage, allowing quick recovery or continuation without rerunning all previous steps. [cite: 398]
+- **Fraud Rate by Browser (Bar Plot)**  
+  The bar plot below shows the average fraud rate (`class` mean) for each browser category.
 
-### [cite_start]Overall State of EDA and Preprocessing: [cite: 399]
-[cite_start]The EDA has progressed significantly: [cite: 400]
-* [cite_start]**Identified Redundant Features**: `user_transaction_count` and `time_since_last_purchase` were found to be constant and can be removed. [cite: 401]
-* [cite_start]**Valuable Engineered Feature**: `hours_to_purchase` (`time_to_purchase`) is a strong differentiator for fraud. [cite: 402]
-* [cite_start]**Categorical Feature Handling**: One-hot encoding applied to source, browser, sex, and country is appropriate for most ML models. [cite: 403]
-* [cite_start]**Numerical Feature Scaling**: Amount and Time in `credit_data` are scaled, which is crucial for algorithms sensitive to feature scales. [cite: 404]
-* [cite_start]**Train-Test Split Strategy**: Stratified splitting effectively addresses the class imbalance during dataset partitioning. [cite: 405]
-* [cite_start]**Device ID Insight**: The non-unique `device_ids` suggest potential for feature engineering (e.g., count of transactions per device, or even device-level fraud rate). [cite: 406]
-* [cite_start]**Overall EDA Insights**: [cite: 407]
-    * **Data Quality**: Good data quality with no missing values after initial cleaning. [cite_start]Duplicates handled in `credit_data`. [cite: 408]
-    * [cite_start]**Time Features**: `signup_time` and `purchase_time` are correctly converted to datetime objects, enabling time-based feature engineering. [cite: 409]
-    * [cite_start]**Class Imbalance**: Both `fraud_data` and `credit_data` suffer from significant class imbalance. [cite: 410] [cite_start]This is a critical challenge for model building and requires careful consideration of evaluation metrics and potentially resampling techniques. [cite: 411] [cite_start]The imbalance in `credit_data` is particularly extreme. [cite: 412]
-    * [cite_start]**Feature Distributions (fraud_data)**: [cite: 413]
-        * [cite_start]`purchase_value` has a moderate range. [cite: 414]
-        * [cite_start]`age` is fairly normally distributed around the early 30s. [cite: 415]
-        * [cite_start]`source` and `browser` show clear dominant categories (SEO/Ads, Chrome). [cite: 416]
-    * [cite_start]**Fraud Predictors (Initial Visualizations for fraud_data)**: [cite: 417]
-        * [cite_start]Neither 'browser' nor 'age' appears to be a strong individual predictor of fraud based on these initial visualizations. [cite: 418]
-        * [cite_start]The fraud rate is consistent across browsers, and age distributions are similar for both classes. [cite: 419]
-    * [cite_start]**Key Findings for fraud_data**: [cite: 420]
-        * [cite_start]`age`, `browser`, and `purchase_value` alone don't show strong differentiation between fraud classes. [cite: 421]
-        * [cite_start]`hours_to_purchase` is a very strong indicator of fraud. [cite: 422] [cite_start]Fraudulent activities tend to occur much sooner after a user signs up. [cite: 423] [cite_start]This feature should be highly valuable for the model. [cite: 424]
-    * [cite_start]**Key Findings for credit_data**: [cite: 425]
-        * [cite_start]`Amount` is a potentially important feature for differentiating fraud, with fraudulent transactions tending to have higher values. [cite: 426]
-        * [cite_start]The `Amount` feature is highly skewed and benefits from log transformation for modeling. [cite: 427]
-        * [cite_start]The extreme class imbalance in `credit_data` (0.17% fraud) reinforces the need for specialized handling during model training and evaluation. [cite: 428]
-    * [cite_start]**Successful IP Mapping**: The process correctly converted IP types, performed a range-based merge (`merge_asof`), and handled unmatched IPs by labeling them 'Unknown'. [cite: 429]
-    * [cite_start]**Match Rate**: Approximately 86.8% of IP addresses were successfully mapped to a country. [cite: 430]
-    * [cite_start]**"Unknown" Category Importance**: The 'Unknown' country category is substantial (second highest by volume) and should be treated as a distinct geographical category for analysis and modeling. [cite: 431] [cite_start]Its relationship to fraud rates should be explored. [cite: 432]
-    * [cite_start]**Geographic Distribution**: The United States is the primary source of transactions, followed by the 'Unknown' category and then other major countries. [cite: 433]
+  ![Fraud Rate by Browser](images/fraud_rate_by_browser.png)
 
-## [cite_start]Challenges [cite: 433]
+  - **Observation**: Fraud rates across browsers are similar, ranging roughly from 9% to 10%. Error bars overlap considerably, indicating no significant difference. Therefore, 'browser' alone may not be a strong fraud predictor.
 
-**1. [cite_start]Package Version Conflicts** [cite: 434]
-* [cite_start]**Challenge**: `ImportError: cannot import name 'parse_version'` due to incompatibility between scikit-learn and imbalanced-learn. [cite: 435]
-* [cite_start]**Cause**: Newer scikit-learn moved `parse_version` to `sklearn.utils.fixes`, but older imbalanced-learn tried importing it from `sklearn.utils`. [cite: 436]
-* [cite_start]**Solution**: [cite: 437]
-    * [cite_start]`pip install scikit-learn==1.0.2 imbalanced-learn==0.8.1` # For Python ≤ 3.11 [cite: 438]
-    * [cite_start]**OR** [cite: 439]
-    * [cite_start]`pip install scikit-learn==1.4.0 imbalanced-learn==0.12.0` # For Python 3.12 [cite: 440]
+- **Age Distribution by Fraud Class (Box Plot)**  
+  The box plot below visualizes the age distribution for fraudulent (class 1) and non-fraudulent (class 0) transactions.
 
-**2. [cite_start]Python 3.12 Compatibility Issues** [cite: 441]
-* [cite_start]**Challenge**: [cite: 442] [cite_start]`AttributeError: module 'pkgutil' has no attribute 'ImpImporter'` when installing old packages. [cite: 443]
-* [cite_start]**Cause**: Python 3.12 removed deprecated features like `pkgutil.ImpImporter`, breaking older libraries. [cite: 444]
-* [cite_start]**Solution**: [cite: 445]
-    * [cite_start]Use Python 3.9 (last stable version for older packages). [cite: 446]
-    * [cite_start]Or upgrade to newer package versions (see above). [cite: 447]
 
-**3. [cite_start]Failed Dependency Installation (numpy.distutils)** [cite: 448]
-* [cite_start]**Challenge**: [cite: 449] [cite_start]`ModuleNotFoundError: No module named 'numpy.distutils'` during scikit-learn installation. [cite: 450]
-* [cite_start]**Cause**: Older scikit-learn relied on `numpy.distutils`, which was removed in newer NumPy. [cite: 451]
-* [cite_start]**Solution**: [cite: 452]
-    * [cite_start]`pip install numpy==1.19.5` # For scikit-learn 0.24.2 [cite: 453]
-    * [cite_start]`pip install scikit-learn==0.24.2` [cite: 454]
+  - **Observation**: Median ages for both classes are similar (~33). The interquartile ranges overlap substantially, and both show outliers in higher age ranges. Age does not appear to distinctly separate fraud classes.
 
-**4. [cite_start]Imbalanced Dataset Handling** [cite: 457]
-* [cite_start]**Challenge**: Original class distribution: 90.6% (Class 0) vs. 9.4% (Class 1). [cite: 458]
-* [cite_start]**Solution**: [cite: 459]
-    * [cite_start]Use SMOTETomek (or manual SMOTE + TomekLinks) to balance classes. [cite: 460]
-    * [cite_start]Target ratio: `sampling_strategy=0.33` (1 fraud : 3 non-fraud). [cite: 461]
+## 11. Saving Cleaned Data
 
-[cite_start]**5. pip Installation Errors** [cite: 463]
-* [cite_start]**Challenge**: Metadata generation failed due to setuptools conflicts. [cite: 464]
-* [cite_start]**Solution**: [cite: 465]
-    * [cite_start]Upgrade pip and setuptools: [cite: 466]
-        * [cite_start]`python -m pip install --upgrade pip setuptools wheel` [cite: 467]
-    * [cite_start]Use `--no-build-isolation` flag for problematic packages: [cite: 468]
-        * [cite_start]`pip install scikit-learn==1.0.2 --no-build-isolation` [cite: 470]
+- `fraud_data.to_csv('../data/cleaned_fraud_data.csv', index=False)`  
+- `credit_data.to_csv('../data/cleaned_credit_data.csv', index=False)`  
 
-## [cite_start]Next Steps [cite: 471]
-* [cite_start]Task 3: Integrate object detection using YOLOv8 on collected images [cite: 472]
-* [cite_start]Task 4: Expose cleaned data and insights via a FastAPI backend [cite: 473]
-* [cite_start]Task 5: Orchestrate the pipeline using Dagster (end-to-end scheduling, monitoring) [cite: 474]
+Saving the processed data is good practice to avoid reprocessing steps if the notebook is restarted.
+
+## 12. Purchase Value Distribution by Fraud Class (fraud_data)
+
+- **Plot**:  
+  ```python
+  sns.histplot(data=fraud_data, x='purchase_value', hue='class', bins=30, kde=True, alpha=0.6)
+````
+
+* **Observation**:
+
+  * The distribution of `purchase_value` for both non-fraudulent (class 0, blue) and fraudulent (class 1, orange) transactions is right-skewed.
+  * Non-fraudulent transactions peak around 30-40 purchase value.
+  * Fraudulent transactions peak in a similar range, perhaps slightly lower, with an overall similar distribution shape.
+  * The absolute count of non-fraudulent transactions is much higher, as expected due to class imbalance.
+* **Conclusion**: `purchase_value` alone is not a strong distinguishing feature between fraud and non-fraud, as distributions largely overlap.
+
+## 13. Transaction Amount by Fraud Class (credit\_data)
+
+* **Plot**:
+
+  ```python
+  sns.boxplot(x='Class', y='Amount', data=credit_data, showfliers=False)
+  ```
+* **Observation**:
+
+  * **Non-Fraud (Class 0)**: Median transaction amount is very low; most non-fraudulent transactions are small. The box plot is compressed near the bottom.
+  * **Fraud (Class 1)**: Median transaction amount is higher than non-fraudulent, indicating fraudulent transactions tend to have larger amounts.
+  * Even excluding outliers, non-fraud amounts reach \~180-190, while fraud amounts can go up to \~260.
+* **Conclusion**: Unlike `purchase_value` in `fraud_data`, `Amount` in `credit_data` shows a noticeable difference between fraud and non-fraud, making it an important feature.
+
+
+## 14. Log-Transformed Transaction Amount Distribution (credit\_data)
+
+* **Plot**:
+
+  ```python
+  plt.hist(np.log1p(credit_data['Amount']), bins=50)
+  ```
+* **Purpose**: Log transformation (using `np.log1p`) normalizes the heavily skewed `Amount` distribution, making it more symmetrical for modeling.
+* **Observation**: Post-transformation, the distribution is bell-shaped with a peak around 1.0–2.0 and a tail extending higher.
+* **Conclusion**: This transformation effectively normalizes `Amount` for better model suitability.
+
+## 15. Time from Signup to Purchase (Fraud vs Non-Fraud) (fraud\_data)
+
+* **Feature Engineering**:
+
+  ```python
+  fraud_data['hours_to_purchase'] = ((fraud_data['purchase_time'] - fraud_data['signup_time']).dt.total_seconds()) / 3600
+  ```
+
+  Calculates hours between signup and purchase — a key fraud indicator.
+* **Plot**:
+
+  ```python
+  sns.boxplot(x='class', y='hours_to_purchase', data=fraud_data, showfliers=False)
+  ```
+* **Observation**:
+
+  * **Non-Fraud (Class 0)**: Median `hours_to_purchase` is high with a wide interquartile range.
+  * **Fraud (Class 1)**: Median is significantly lower; fraudulent purchases occur much sooner after signup.
+  * Fraud distribution is tighter and skewed toward faster purchases.
+* **Conclusion**: `hours_to_purchase` is a strong predictor; fraudulent transactions tend to occur quickly after signup.
+
+
+## 16. IP Address Type Conversion and Range Check
+
+* **Type Conversion**:
+
+  ```python
+  fraud_data['ip_address'] = fraud_data['ip_address'].astype('int64')
+  ip_to_country['lower_bound_ip_address'] = ip_to_country['lower_bound_ip_address'].astype('int64')
+  ip_to_country['upper_bound_ip_address'] = ip_to_country['upper_bound_ip_address'].astype('int64')
+  ```
+
+  Converts IP-related columns to `int64` for numerical operations and merging.
+* **Verification**: All IP columns confirmed as `int64`.
+* **IP Range Check**:
+
+  * Min IP in `fraud_data`: 52,093
+  * Max IP in `fraud_data`: 4,294,850,499
+  * Country database range: 16,777,216 to 3,758,996,383
+  * Observation: Maximum IP in `fraud_data` exceeds the country database upper bound, meaning \~13.2% of IPs won’t match the country mapping.
+  * Valid IPs within range: 131,095 / 151,112 (86.8%)
+##  17. Merging Fraud Data with IP-to-Country Mapping
+
+    Both fraud_data and ip_to_country datasets are sorted by IP columns (ip_address and lower_bound_ip_address) to enable pd.merge_asof.
+
+    pd.merge_asof merges on ranges, assigning the nearest lower_bound_ip_address less than or equal to each ip_address.
+
+    This strategy correctly maps IPs to countries when IPs fall within a defined range.
+
+    Post-merge, auxiliary IP range columns are dropped to clean the dataset.
+
+18. Handling Unmatched IPs and Cleaning Country Columns
+
+    About 19,383 IPs (13.2%) remain unmatched after merging, corresponding to IPs outside known ranges.
+
+    Duplicate country columns (country_x, country_y) are cleaned up to keep a single country column.
+
+    Unmatched IPs are labeled as 'Unknown' to explicitly handle missing geographical data.
+
+    Verification confirms all NaNs are replaced, with unmatched IPs clearly categorized.
+
+19. Match Rate Statistics
+
+    Total transactions: 151,112.
+
+    Successfully matched IPs: 131,095 (86.8%).
+
+    Unmatched IPs explicitly labeled 'Unknown', ensuring clarity in downstream analysis.
+
+20. Geographic Distribution (Top 10 Countries)
+
+    Top countries by transaction volume include the United States, followed by the 'Unknown' category, China, Japan, Germany, UK, Korea, Brazil, Canada, and Italy.
+
+    The large 'Unknown' category highlights limitations of the IP mapping database and could be a predictor for fraud.
+
+21. Boundary IP Tests
+
+    Synthetic test IPs (min/max and out-of-range values) did not appear in real data, limiting the assessment of edge-case merges.
+
+    This suggests the need for additional validation if edge-case IPs are important.
+
+22. Feature Summary of Engineered Time Features
+
+    Features like user_transaction_count and time_since_last_purchase are constant (1 and 0 respectively), indicating each user has only one transaction.
+
+    These features provide no predictive power and can be dropped.
+
+    purchase_hour and purchase_dayofweek show distributions useful for fraud pattern analysis.
+
+    time_to_purchase (hours since signup) shows wide variability and is a strong predictive feature.
+
+23. Credit Card Data Scaling
+
+    Amount and Time features in credit card data are scaled using StandardScaler to zero mean and unit variance.
+
+    This is important for algorithms sensitive to feature scales.
+
+    Original unscaled columns may be dropped after scaling.
+
+24. E-commerce Data Preprocessing for Modeling
+
+    One-hot encoding applied on categorical features (source, browser, sex, country) with drop_first=True to prevent multicollinearity.
+
+    Stratified train-test split (80-20) preserves fraud/non-fraud class distribution, crucial given class imbalance.
+
+    Post-split shapes: Training features ~120k samples with 206 features; test features ~30k samples.
+
+25. IP Address Data Type Conversion, Sorting, and Saving
+
+    Merged data saved successfully with no missing country values.
+
+    Rows: 151,112; Columns: 21.
+
+26. User and Device ID Analysis
+
+    151,112 unique user_ids confirm one transaction per user.
+
+    137,956 unique device_ids indicate some devices used in multiple transactions.
+
+    Device usage frequency could be a useful fraud detection feature.
+
+27. Refined Timestamp Feature Engineering
+
+    Ensured purchase_time and signup_time are datetime objects.
+
+    Created new features: hour_of_day, day_of_week, hours_since_signup.
+
+    Attempted to compute transaction frequency and time since last transaction per user, but these are constant due to one transaction per user, thus redundant.
+
+    hours_since_signup remains a strong fraud indicator.
+
+28. Memory Optimization
+
+    Dropped original datetime columns after feature engineering to save memory.
+
+29. Risk Flag Features
+
+    Created binary flags:
+
+        new_account: Transactions within 1 hour of signup.
+
+        off_hour_purchase: Transactions before 6 AM or after 8 PM.
+
+    These flags are aligned with common fraud heuristics and likely to improve model interpretability.
+
+30. Transactions by Hour of Day (Fraud vs Non-Fraud)
+
+    Fraudulent transaction counts are lower overall but proportionally stable across hours.
+
+    No strong hourly fraud pattern detected.
+
+    The off_hour_purchase flag remains useful despite this.
+
+31. Fraud by Account Age (Hours)
+
+    Fraudulent transactions mostly occur soon after account creation.
+
+    Non-fraud transactions occur across wider account age range.
+
+    Confirms hours_since_signup is a highly discriminative feature.
+
+32. Class Imbalance Visualization and Resampling
+
+    Original fraud rate: 9.4%.
+
+    Defined a resampling function to oversample minority class to ~24.8% representation.
+
+    This reduces class imbalance and improves model training on fraud cases.
+
+33. Class Weights Calculation and Checkpoint Saving
+
+    Computed sample weights inversely proportional to class frequencies for balanced training.
+
+    Saved datasets and resampled data with pickle for efficient workflow resumption.
+
+Overall Summary & Insights
+
+    Redundant features (user_transaction_count, time_since_last_purchase) identified and removed.
+
+    Strong predictive features engineered, especially hours_to_purchase.
+
+    IP mapping achieved 86.8% coverage; unmatched IPs labeled 'Unknown' and treated as important.
+
+    Device ID reuse suggests an additional fraud signal.
+
+    Proper categorical encoding, scaling, and stratified splitting ensure robust modeling.
+
+    Class imbalance handled through oversampling and weighting.
+
+    Data quality is high with careful cleaning and feature engineering throughout.
