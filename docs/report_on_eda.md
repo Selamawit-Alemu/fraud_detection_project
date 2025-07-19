@@ -171,9 +171,9 @@ Saving the processed data is good practice to avoid reprocessing steps if the no
 ## 12. Purchase Value Distribution by Fraud Class (fraud_data)
 
 - **Plot**:  
-  ```python
+\
   sns.histplot(data=fraud_data, x='purchase_value', hue='class', bins=30, kde=True, alpha=0.6)
-````
+
 
 * **Observation**:
 
@@ -283,7 +283,7 @@ Saving the processed data is good practice to avoid reprocessing steps if the no
     Top countries by transaction volume include the United States, followed by the 'Unknown' category, China, Japan, Germany, UK, Korea, Brazil, Canada, and Italy.
 
     The large 'Unknown' category highlights limitations of the IP mapping database and could be a predictor for fraud.
-    
+
 21. Boundary IP Tests
 
     Synthetic test IPs (min/max and out-of-range values) did not appear in real data, limiting the assessment of edge-case merges.
