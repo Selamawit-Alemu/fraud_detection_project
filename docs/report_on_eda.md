@@ -1,4 +1,4 @@
-Executive Summary
+## Executive Summary
 
 This interim submission establishes a solid foundation for the fraud detection pipeline by conducting thorough exploratory data analysis (EDA), meticulous data cleaning, and strategic preprocessing on two key datasets: e-commerce transactions (Fraud_Data.csv) and credit card transactions (creditcard.csv). These steps ensure the data is prepared for effective model development and evaluation in subsequent phases.
 ### Key Highlights
@@ -26,8 +26,7 @@ This interim submission establishes a solid foundation for the fraud detection p
 
 - **Code Structure & Reproducibility**
   - Implemented in a clean Jupyter Notebook, with well-documented sections for each step.
-  - Raw data stored in `data/raw/`, processed outputs in `data/processed/`.
-
+  - Raw data stored in data/
 ### Progress and Completed Work
 
 #### Completed Milestones
