@@ -54,13 +54,13 @@ This project focuses on detecting fraudulent transactions in e-commerce and cred
 
 ## 📁 Folder Structure
 
-fraud_detection_project/
-│
-├── data/ # Contains raw and cleaned data files
-├── docs/ # Contains detailed reports
-├── notebooks/1_eda.ipynb # Main Jupyter notebook for Task 1
-├── README.md # Project documentation
-└── requirements.txt # Python environment dependencies 
+    fraud_detection_project/
+        │
+        ├── data/ # Contains raw and cleaned data files
+        ├── docs/ # Contains detailed reports
+        ├── notebooks/1_eda.ipynb # Main Jupyter notebook for Task 1
+        ├── README.md # Project documentation
+        └── requirements.txt # Python environment dependencies 
 
 ## ⚙️ How to Run
 
