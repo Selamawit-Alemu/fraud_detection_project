@@ -1,4 +1,4 @@
-# fraud_detection_project
+# Fraud_detection_project
 
 ## Project Milestones & Completed Work
 
@@ -56,8 +56,8 @@
 
 ```
 
-git clone [https://github.com/Selamawit-Alemu/fraud\_detection\_project.git](https://github.com/Selamawit-Alemu/fraud_detection_project.git)
-cd fraud\_detection\_project
+git clone https://github.com/Selamawit-Alemu/fraud_detection_project.git
+cd fraud_detection_project
 
 ```
 
@@ -73,7 +73,7 @@ pip install -r requirements.txt
 
 ```
 
-jupyter notebook 1\_eda.ipynb
+jupyter notebook 1_eda.ipynb
 
 ```
 
