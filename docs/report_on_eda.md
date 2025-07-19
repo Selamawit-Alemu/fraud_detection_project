@@ -8,7 +8,7 @@ This interim submission establishes a solid foundation for the fraud detection p
   - Visualized correlations between fraud likelihood and features like `purchase_value`, `device_id`, `country`, and `ip_address`.
   - For credit card data, identified strong fraud indicators in `Amount`, `V4`, and `V14`, and verified class imbalance visually.
 
-- **Missing Value Handling**
+-  **Missing Value Handling**
   - Missing values in categorical and numeric fields were imputed using appropriate strategies:
     - **Categorical:** Mode imputation for features like `device_id` and `browser`.
     - **Numeric:** Mean/median imputation or row drops, depending on feature relevance and percentage of missing data.
