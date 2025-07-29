@@ -170,7 +170,7 @@ The trained models and their respective preprocessors (or scalers) have been sav
         Visualized how specific features push predictions toward fraud or non-fraud.
 
         Clear separation observed between features that increase fraud likelihood and those that reduce it.
-
+        
     Insights:
 
         SHAP analysis validated the relevance of time-related and categorical features.
@@ -246,7 +246,6 @@ jupyter notebook 1_eda.ipynb
     imbalanced-learn
 
     ipaddress (for IP conversion)
-
 
 ## 📌 Assumptions Made
 
