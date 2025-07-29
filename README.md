@@ -48,16 +48,7 @@ This project focuses on detecting fraudulent transactions in e-commerce and cred
 - Performed stratified train-test split to maintain class distribution.
 - Addressed class imbalance with resampling techniques (e.g., minority class upsampling) and computed class weights.
 
-6. Data Preprocessing for Modeling
-
-    Applied StandardScaler for numerical feature scaling (Amount, Time) in credit_data.
-
-    Used one-hot encoding (with drop_first=True) for categorical variables: source, browser, sex, and country.
-
-    Performed stratified train-test split to maintain class distribution.
-
-    Addressed class imbalance with resampling techniques (e.g., SMOTE, RandomOverSampler) and class weighting in models.
- 7. Fraud Detection Modeling
+### 7. Fraud Detection Modeling
 
 
 2. Data Preparation
@@ -160,6 +151,32 @@ The trained models and their respective preprocessors (or scalers) have been sav
 
     xgboost_credit_model_xgb.json and scaler_credit.pkl for credit card fraud data.
 
+### 8. Model Explainability (Task 3)
+
+    Global Explainability with SHAP Summary Plot:
+
+        Used SHAP (SHapley Additive exPlanations) to interpret the best-performing models.
+
+        Identified key features influencing fraud predictions globally for both e-commerce and credit card datasets.
+
+        Features like cat_country_Japan, device_id, and browser had the highest impact in the fraud dataset.
+
+        For credit card data, V14, V10, and V12 were the most influential contributors to fraud detection.
+
+    Local Explainability with SHAP Force Plot:
+
+        Generated force plots for individual predictions to understand the contribution of each feature to the final model output.
+
+        Visualized how specific features push predictions toward fraud or non-fraud.
+
+        Clear separation observed between features that increase fraud likelihood and those that reduce it.
+
+    Insights:
+
+        SHAP analysis validated the relevance of time-related and categorical features.
+
+        Helped establish trust and transparency in model predictions by visually communicating decision logic.
+
 ### 🔁 Reproducibility & Code Structure
 
     Project developed in modular Jupyter Notebooks:
@@ -167,6 +184,8 @@ The trained models and their respective preprocessors (or scalers) have been sav
         1_eda.ipynb – Data Cleaning, EDA, Feature Engineering
 
         2_model_training.ipynb – Modeling, Evaluation, Explainability
+
+        3_model_explainability.ipynb- Model Explainability
 
     Checkpoints and transformed data saved using joblib and pickle for reproducibility.
 
@@ -178,7 +197,10 @@ The trained models and their respective preprocessors (or scalers) have been sav
         │
         ├── data/ # Contains raw and cleaned data files
         ├── docs/ # Contains detailed reports
-        ├── notebooks/1_eda.ipynb # Main Jupyter notebook for Task 1
+        ├── notebooks
+                 ├──1_eda.ipynb # Main Jupyter notebook for Task 1
+                 ├──2_model_training.ipynb – Modeling, Evaluation, Explainability
+                 └──3_model_explainability.ipynb- Model Explainability
         ├── README.md # Project documentation
         └── requirements.txt # Python environment dependencies 
 
